@@ -1,0 +1,33 @@
+{
+  "name": "nodejs-hw-mongodb",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MaryHoglan/nodejs-hw-mongodb.git"
+  },
+  "keywords": [],
+  "author": "Maryna Rastrygina <maryhoglan78@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MaryHoglan/nodejs-hw-mongodb/issues"
+  },
+  "homepage": "https://github.com/MaryHoglan/nodejs-hw-mongodb#readme",
+  "description": "",
+  "devDependencies": {
+    "@eslint/js": "^9.30.1",
+    "eslint": "^9.30.1",
+    "globals": "^16.3.0",
+    "nodemon": "^3.1.10"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "pino-http": "^10.5.0"
+  }
+}
