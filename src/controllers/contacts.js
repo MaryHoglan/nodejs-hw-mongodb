@@ -43,20 +43,24 @@ export const createContactByIdController = async (req, res) => {
 };
 
 
-export const deleteContactController = async (req, res) => {
-  const contact = await deleteContact(req.params.id);
 
+
+export const updateContactController  = async (req, res) => {
+  const contact = await updateContact(req.params.id, req.body);
   if (!contact) {
     throw  createHttpError(404, 'Contact not found');
   }
   res.json({
     status: 200,
-    message: 'Contact deleted successfully'
+    message: 'Contact updated successfully',
+    data: contact,
   });
 };
 
-export const updateContactController  = async (req, res) => {
-  const contact = await updateContact(req.params.id, req.body);
+
+export const deleteContactController = async (req, res) => {
+  const contact = await deleteContact(req.params.id);
+
   if (!contact) {
     throw  createHttpError(404, 'Contact not found');
   }
