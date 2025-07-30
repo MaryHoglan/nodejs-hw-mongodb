@@ -1,11 +1,12 @@
 import express from 'express';
 import cors from 'cors';
 import pino from 'pino-http';
-import contactsRouter from './routers/contacts.js';
+import contactsRouter from './routes/contacts.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 
-
+import authRouter from './routes/auth.js';
+import { auth } from './middlewares/auth.js';
 
 
 export function setupServer() {
@@ -15,8 +16,10 @@ export function setupServer() {
     app.use(pino());
     app.use(express.json());
 
-    app.use('/contacts', contactsRouter);
-    //app.get('/contacts/:contactId', getContactByIdController);
+    app.use('/auth', authRouter);
+    app.use('/contacts', auth, contactsRouter);
+ 
+   
  
     app.get('/', (req, res) => {
         res.json({ message: 'API is running' });
