@@ -6,7 +6,7 @@ import createHttpError from 'http-errors';
 import { User } from '../models/user.js';
 import { Session } from '../models/session.js';
 
-
+//registerUser
 export async function registerUser(payload) {
   const user = await User.findOne({ email: payload.email });
 
@@ -19,6 +19,8 @@ export async function registerUser(payload) {
   return User.create(payload);
 }
 
+
+//loginUser
 export async function loginUser(email, password) { 
     const user = await User.findOne({ email });
 
@@ -44,10 +46,15 @@ const isMatch = await bcrypt.compare(password, user.password);
 }
 
 
+
+
+//logoutUser
 export async function logoutUser(sessionId) {
   await Session.deleteOne({ _id: sessionId });
 }
 
+
+//refreshSession
 export async function refreshSession(sessionId, refreshToken) {
   const session = await Session.findById(sessionId);
 

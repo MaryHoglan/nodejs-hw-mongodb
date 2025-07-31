@@ -21,12 +21,13 @@ export async function getAllContacts(
   perPage,
   sortBy,
   sortOrder,
-  filter
+  filter,
+  userId,
 ) {
   const skip = page > 0 ? (page - 1) * perPage : 0;
   const limit = perPage;
 
-  const query = Contact.find();
+  const query = Contact.find({userId});
 
   if (typeof filter?.type !== 'undefined') {
     query.where('contactType').equals(filter.type);
@@ -50,22 +51,22 @@ export async function getAllContacts(
   return { data: contacts, ...paginationData };
 }
 
-export async function getContactById(id) {
-  return await Contact.findById(id);
+export async function getContactById(id, userId) {
+  return await Contact.findById({ _id: id, userId });
 }
 
 export async function createContact(payload) {
   return Contact.create(payload);
 }
 
-export async function updateContact(id, payload) {
-  return Contact.findByIdAndUpdate(id, payload, {
+export async function updateContact(id, payload, userId) {
+  return Contact.findByIdAndUpdate({ _id: id, userId }, payload, {
     new: true,
   });
 }
 
-export async function deleteContact(id) {
-  return Contact.findByIdAndDelete(id);
+export async function deleteContact(id, userId) {
+  return Contact.findByIdAndDelete({ _id: id, userId });
 }
 
 
