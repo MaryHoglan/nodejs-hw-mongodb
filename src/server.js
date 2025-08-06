@@ -1,3 +1,5 @@
+import path from 'node:path';
+
 import express from 'express';
 import cors from 'cors';
 import pino from 'pino-http';
@@ -9,6 +11,7 @@ import contactsRouter from './routes/contacts.js';
 import { auth } from './middlewares/auth.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
+
 
 
 export function setupServer() {
@@ -26,6 +29,8 @@ export function setupServer() {
     })
   );
   
+
+  app.use('/avatars', express.static(path.resolve("src/uploads/avatars")));
   
   
 // Routes

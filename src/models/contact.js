@@ -1,4 +1,5 @@
 
+
 import mongoose from 'mongoose';
 
 const contactSchema = new mongoose.Schema(
@@ -14,6 +15,12 @@ const contactSchema = new mongoose.Schema(
     email: {
       type: String
     },
+
+    avatar: {
+      type: String,
+      default: null,
+    },
+
     isFavourite: {
       type: Boolean,
       default: false

@@ -1,9 +1,13 @@
+import * as fs from "node:fs/promises";
+import path from "node:path";
+
 import createHttpError from 'http-errors';
 
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
-
+import { uploadToCloudinary } from "../utils/uploadToCloudinary.js";
+import { getEnvVariable } from "../utils/getEnvVariable.js";
 
 import {
   getAllContacts,
@@ -13,6 +17,8 @@ import {
   updateContact
 } from '../services/contacts.js';
 
+
+//getContacts
 
 export const getContactsController = async (req, res) => {
  
@@ -36,6 +42,8 @@ export const getContactsController = async (req, res) => {
   });
 };
 
+//getContactById
+
 export const getContactByIdController = async (req, res) => {
    const contact = await getContactById(req.params.id, req.user.id);
   
@@ -49,8 +57,30 @@ export const getContactByIdController = async (req, res) => {
     });
   };
 
+//createContact
+
 export const createContactController = async (req, res) => {
-  const contact = await createContact({ ...req.body, userId: req.user.id });
+  let avatar = null;
+  if (getEnvVariable("UPLOAD_TO_CLOUDINARY") === "true") {
+    const result = await uploadToCloudinary(req.file.path);
+    await fs.unlink(req.file.path);
+    
+    avatar = result.secure_url;
+  } else {
+    await fs.rename(
+      req.file.path,
+      path.resolve("src/uploads/avatars", req.file.filename),
+    );
+    avatar = `http://localhost:3000/avatars/${req.file.filename}`;
+  }
+
+  
+  
+  const contact = await createContact({
+    ...req.body,
+    avatar,
+    userId: req.user.id
+  });
 
   res.status(201).json({
     status: 201,
@@ -61,7 +91,7 @@ export const createContactController = async (req, res) => {
 };
 
 
-
+//updateContact
 
 export const updateContactController  = async (req, res) => {
   const contact = await updateContact(req.params.id, req.body, req.user.id);
@@ -75,6 +105,8 @@ export const updateContactController  = async (req, res) => {
   });
 };
 
+
+//deleteContact
 
 export const deleteContactController = async (req, res) => {
   const contact = await deleteContact(req.params.id, req.user.id);

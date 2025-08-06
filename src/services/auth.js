@@ -1,10 +1,25 @@
 import crypto from 'node:crypto';
+import * as fs from "node:fs";
+import path from 'node:path';
 
 import bcrypt from 'bcrypt';
 import createHttpError from 'http-errors';
+import jwt from 'jsonwebtoken';
+import Handlebars from 'handlebars';
+
 
 import { User } from '../models/user.js';
 import { Session } from '../models/session.js';
+
+import { sendMail } from '../utils/sendMail.js';
+import { getEnvVariable } from '../utils/getEnvVariable.js';
+
+const REQUEST_PASSWORD_RESET_TEMPLATE = fs.readFileSync(
+    path.resolve("src/templates/request-password-reset.hbs"),
+    { encoding: 'utf-8' },
+);
+
+
 
 //registerUser
 export async function registerUser(payload) {
@@ -79,4 +94,60 @@ export async function refreshSession(sessionId, refreshToken) {
     accessTokenValidUntil: new Date(Date.now() + 10 * 60 * 1000), // 10 minutes
     refreshTokenValidUntil: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours
   });
+}
+
+
+
+//requestPasswordReset
+export async function requestPasswordReset(email) {
+    const user = await User.findOne({ email });
+    if (user === null) {
+        //throw new createHttpError.NotFound("User not found");
+        return;
+    }
+    const token = jwt.sign({
+        sub: user._id,
+        name: user.name
+    },
+        getEnvVariable("SECRET_JWT"),
+        {
+            expiresIn: "15m",
+        }
+    );
+    const template = Handlebars.compile(REQUEST_PASSWORD_RESET_TEMPLATE);
+
+    const APP_DOMAIN = getEnvVariable("APP_DOMAIN");
+
+    await sendMail({
+        
+        to: email,
+        subject: "Reset password",
+        html: template({
+            resetPasswordLink: `< href="${APP_DOMAIN}/reset-password/${token}`
+        }), 
+    });
+}
+//resetPassword
+export async function resetPassword(token, password) {
+    try {
+        const decoded = jwt.verify(token, getEnvVariable("SECRET_JWT"));
+
+        const user = await User.findById(decoded.sub);
+        if (user === null) {
+            throw new createHttpError.NotFound("User not found");
+        }
+        const hashedPassword = await bcrypt.hash(password, 10);
+        await User.findByIdAndUpdate(user._id, { password: hashedPassword});
+        
+    } catch (error) {
+        if (error.name === "TokenExpiredError") {
+            throw new createHttpError.Unauthorized("Token is expired");
+        }
+        
+        if (error.name === "JsonWebTokenError") {
+            throw new createHttpError.Unauthorized("Token is unauthorized");
+        }
+
+        throw error;
+    }
 }
