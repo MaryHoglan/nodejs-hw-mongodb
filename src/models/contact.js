@@ -16,7 +16,7 @@ const contactSchema = new mongoose.Schema(
       type: String
     },
 
-    avatar: {
+    photo: {
       type: String,
       default: null,
     },

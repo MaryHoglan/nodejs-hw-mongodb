@@ -45,14 +45,18 @@ router.post(
 );
 
 router.post(
-  '/request-password-reset',
+  '/send-reset-email', 
   validateBody(requestPasswordResetSchema),
   ctrlWrapper(requestPasswordResetController));
 
 router.post(
-  '/reset-password',
+  '/reset-pwd',
   validateBody(resetPasswordSchema),
   ctrlWrapper(resetPasswordController)); 
 
 
 export default router;
+
+
+
+//request-password-reset

@@ -123,7 +123,7 @@ export async function requestPasswordReset(email) {
         to: email,
         subject: "Reset password",
         html: template({
-            resetPasswordLink: `< href="${APP_DOMAIN}/reset-password/${token}`
+            resetPasswordLink: `< href="${APP_DOMAIN}/reset-pwd/${token}`
         }), 
     });
 }
