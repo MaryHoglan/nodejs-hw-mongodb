@@ -19,7 +19,7 @@ const router = express.Router();
 router.get('/', ctrlWrapper(getContactsController));
 router.get('/:id', isValidId, ctrlWrapper(getContactByIdController));
 router.post('/',upload.single("photo"), validateBody(ContactsSchema), ctrlWrapper(createContactController));
-router.patch('/:id', upload.single("photo"), isValidId, validateBody(updateContactsSchema), ctrlWrapper(updateContactController));
+router.patch('/:id', isValidId, upload.single("photo"), validateBody(updateContactsSchema), ctrlWrapper(updateContactController));
 router.delete('/:id', isValidId, ctrlWrapper(deleteContactController));
 
 export default router;
