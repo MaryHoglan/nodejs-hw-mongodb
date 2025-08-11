@@ -6,7 +6,9 @@ import {
   registerSchema,
   requestPasswordResetSchema,
   resetPasswordSchema,
+  confirmOAuthShema,
 } from '../validation/auth.js';
+
 import { validateBody } from '../middlewares/validateBody.js';
 
 import {
@@ -16,6 +18,8 @@ import {
   refreshController,
   requestPasswordResetController,
   resetPasswordController,
+  getOAuthController,
+  confirmOAuthController,
 
 } from '../controllers/auth.js';
 
@@ -54,9 +58,12 @@ router.post(
   validateBody(resetPasswordSchema),
   ctrlWrapper(resetPasswordController)); 
 
+router.get("/get-oauth-url", ctrlWrapper(getOAuthController));
+
+router.post("/confirm-oauth", validateBody(confirmOAuthShema), ctrlWrapper(confirmOAuthController));
+
 
 export default router;
 
 
 
-//request-password-reset

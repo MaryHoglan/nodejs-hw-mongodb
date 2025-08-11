@@ -20,3 +20,7 @@ export const resetPasswordSchema = Joi.object({
     token: Joi.string().required(),
     password: Joi.string().required(),
 });
+
+export const confirmOAuthShema = Joi.object({
+  code: Joi.string().required()
+});
