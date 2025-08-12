@@ -11,6 +11,7 @@ import contactsRouter from './routes/contacts.js';
 import { auth } from './middlewares/auth.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
+import { swaggerDocs } from './middlewares/swaggerDocs.js';
 
 
 
@@ -29,7 +30,7 @@ export function setupServer() {
     })
   );
   
-
+  app.use('/api-docs', swaggerDocs());
   app.use('/photo', express.static(path.resolve("src/uploads/photos")));
   
   
