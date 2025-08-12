@@ -1,0 +1,21 @@
+tags:
+  - Auth
+summary: User logout endpoint
+operationId: logoutUser
+description: 'Logs out the user by invalidating the current session and clearing authentication cookies.'
+security: []
+parameters:
+  - in: cookie
+    name: sessionId
+    required: true
+    schema:
+      description: The session ID cookie identifying the user's active session.
+      type: string
+      example: xyz789sessionid
+responses:
+  '204':
+    description: No Content
+  '400':
+    $ref: ../../components/responses/400.yaml
+  '500':
+    $ref: '../../components/responses/500.yaml'

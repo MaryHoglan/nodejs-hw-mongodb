@@ -1,0 +1,79 @@
+tags:
+  - Auth
+summary: Refresh user session
+operationId: refreshUser
+description: 
+  Refreshes the user's authentication session by validating the provided session ID and refresh token cookies.
+  Sets new authentication cookies and returns a new access token.
+security: []
+parameters:
+  - in: cookie
+    name: sessionId
+    required: true
+    schema:
+      type: string
+    example: xyz789sessionid
+    description: The session ID cookie identifying the user's active session.
+  - in: cookie
+    name: refreshToken
+    required: true
+    schema:
+      type: string
+    example: xyz789refreshtoken
+    description: The refresh token cookie associated with the user's session.
+responses:
+  '200':
+    description: Session refreshed successfully
+    headers:
+      Set-Cookie:
+        description: Cookies set after successful session refresh
+        schema:
+          type: array
+          items:
+            type: string
+            example: |
+              sessionId=xyz789sessionid; Path=/; HttpOnly
+              refreshToken=xyz789refreshtoken; Path=/; HttpOnly
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: Session  refreshed successfully!
+            data:
+              type: object
+              required:
+                - accessToken
+              properties:
+                accessToken:
+                  type: string
+                  example: 'KM7lFdyoo+KoMu3Qayirz25TLatWquip65kZKxlZ'
+  '400':
+    $ref: ../../components/responses/400.yaml
+  '401':
+    description: Invalid or expired session or refresh token.
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+          properties:
+            status:
+              type: integer
+              example: 401
+            message:
+              type: string
+              example: Session not found or expired
+  '500':
+    $ref: '../../components/responses/500.yaml'

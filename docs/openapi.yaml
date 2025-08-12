@@ -1,18 +1,61 @@
 openapi: 3.1.0
 info:
   version: 1.0.0
-  title: <назва вашого додатку>
+  title: Contacts App
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
-  description: <опис вашого додатку>
+  description:
+    This is the API documentation for the Contact Manager application.
+    The API allows managing contacts with full CRUD functionality, including authentication using Bearer tokens.
 tags:
-  # теги, що ви будете використовувати
+  - name: Contacts
+    description: Operations related to managing contacts
+  - name: Authentication
+    description: User login and registration operations
+
 servers:
-  - url: http://localhost:3000
-  - url: #посилання на задеплоєний сайт
+  - url: http://127.0.0.1:9090
+  - url: https://nodejs-hw-phonebook-app.onrender.com
 paths:
-  # тут будуть посилання на ендпоінти
+  /contacts/{id}:
+    get:
+      $ref: '../swagger/paths/contacts/{id}/get.yaml'
+    patch:
+      $ref: '../swagger/paths/contacts/{id}/patch.yaml'
+    delete:
+      $ref: '../swagger/paths/contacts/{id}/delete.yaml'
+
+  /contacts:
+    get:
+      $ref: '../swagger/paths/contacts/get.yaml'
+    post:
+      $ref: '../swagger/paths/contacts/post.yaml'
+
+  /auth/register:
+    post:
+      $ref: '../swagger/paths/auth/register.yaml'
+
+  /auth/login:
+    post:
+      $ref: '../swagger/paths/auth/login.yaml'
+
+  /auth/refresh:
+    post:
+      $ref: '../swagger/paths/auth/refresh.yaml'
+
+  /auth/send-reset-email:
+    post:
+      $ref: '../swagger/paths/auth/sendResEmail.yaml'
+
+  /auth/reset-pwd:
+    post:
+      $ref: '../swagger/paths/auth/resetPassword.yaml'
+
+  /auth/logout:
+    post:
+      $ref: '../swagger/paths/auth/logout.yaml'
+  
 components:
   securitySchemes:
     bearerAuth:
